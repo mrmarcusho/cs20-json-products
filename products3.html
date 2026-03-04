@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Products - Filter</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .product {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .product h2 {
+            margin: 0 0 5px 0;
+            color: #2c3e50;
+        }
+        .product p {
+            margin: 4px 0;
+            color: #555;
+        }
+        .price {
+            font-weight: bold;
+            color: #27ae60;
+            font-size: 18px;
+        }
+        .categories {
+            color: #888;
+            font-style: italic;
+        }
+        #filterResult {
+            margin-top: 15px;
+        }
+        #filterResult p {
+            background-color: white;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-left: 4px solid #4CAF50;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Product List</h1>
+    <button onclick="loadProducts()">Load Products</button>
+    <div id="result"></div>
+
+    <hr>
+    <h2>Filter by Category</h2>
+    <div class="controls">
+        <select id="categorySelect">
+            <option value="">-- Select a Category --</option>
+        </select>
+        <button onclick="filterProducts()">Filter</button>
+    </div>
+    <div id="filterResult"></div>
+
+    <script>
+        var allProducts = [];
+
+        // Load JSON on page load to populate the category dropdown
+        $.get("products.json", function(data) {
+            var products = data;
+            if (typeof data === "string") {
+                products = JSON.parse(data);
+            }
+            allProducts = products;
+
+            // Extract all unique categories from the JSON data
+            var categories = [];
+            for (var i = 0; i < products.length; i++) {
+                for (var j = 0; j < products[i].categories.length; j++) {
+                    var cat = products[i].categories[j];
+                    if (categories.indexOf(cat) === -1) {
+                        categories.push(cat);
+                    }
+                }
+            }
+            categories.sort();
+
+            // Populate the select element
+            var select = document.getElementById("categorySelect");
+            for (var k = 0; k < categories.length; k++) {
+                var option = document.createElement("option");
+                option.value = categories[k];
+                option.text = categories[k];
+                select.appendChild(option);
+            }
+        });
+
+        function loadProducts() {
+            var output = "";
+            for (var i = 0; i < allProducts.length; i++) {
+                output += '<div class="product">';
+                output += '<h2>' + allProducts[i].name + '</h2>';
+                output += '<p>' + allProducts[i].description + '</p>';
+                output += '<p class="price">Price: $' + allProducts[i].price + '</p>';
+                output += '<p class="categories">Categories: ' + allProducts[i].categories.join(", ") + '</p>';
+                output += '</div>';
+            }
+            document.getElementById("result").innerHTML = output;
+        }
+
+        function filterProducts() {
+            var selected = document.getElementById("categorySelect").value;
+            if (selected === "") {
+                document.getElementById("filterResult").innerHTML = "<p>Please select a category.</p>";
+                return;
+            }
+
+            var output = "";
+            for (var i = 0; i < allProducts.length; i++) {
+                if (allProducts[i].categories.indexOf(selected) !== -1) {
+                    output += '<p>' + allProducts[i].name + '</p>';
+                }
+            }
+            if (output === "") {
+                output = "<p>No products found in this category.</p>";
+            }
+            document.getElementById("filterResult").innerHTML = output;
+        }
+    </script>
+</body>
+</html>

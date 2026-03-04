@@ -1,0 +1,62 @@
+[
+    {
+        "name": "Vintage T-shirt",
+        "description": "A classic retro-style t-shirt",
+        "price": 35,
+        "categories": ["clothing", "vintage"]
+    },
+    {
+        "name": "Leather Wallet",
+        "description": "A durable leather wallet",
+        "price": 45,
+        "categories": ["accessories", "leather goods"]
+    },
+    {
+        "name": "Bluetooth Speaker",
+        "description": "A compact wireless speaker",
+        "price": 60,
+        "categories": ["electronics", "audio"]
+    },
+    {
+        "name": "Running Shoes",
+        "description": "Comfortable shoes for running",
+        "price": 90,
+        "categories": ["footwear", "sports"]
+    },
+    {
+        "name": "Ceramic Mug",
+        "description": "A sturdy ceramic mug",
+        "price": 18,
+        "categories": ["kitchen", "handmade"]
+    },
+    {
+        "name": "Yoga Mat",
+        "description": "A comfortable yoga mat",
+        "price": 40,
+        "categories": ["sports", "wellness"]
+    },
+    {
+        "name": "Sunglasses",
+        "description": "Stylish everyday sunglasses",
+        "price": 55,
+        "categories": ["accessories", "vintage"]
+    },
+    {
+        "name": "Backpack",
+        "description": "A spacious everyday backpack",
+        "price": 75,
+        "categories": ["accessories", "electronics"]
+    },
+    {
+        "name": "Scented Candle",
+        "description": "A pleasant scented candle",
+        "price": 22,
+        "categories": ["home", "wellness"]
+    },
+    {
+        "name": "Vintage Record Player",
+        "description": "A classic vinyl record player",
+        "price": 120,
+        "categories": ["electronics", "vintage", "audio"]
+    }
+]

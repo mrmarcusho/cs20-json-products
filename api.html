@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dictionary API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+        }
+        .search-area {
+            margin: 20px 0;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 250px;
+            margin-right: 10px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .word-result {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .word-result h2 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        .phonetic {
+            color: #888;
+            font-style: italic;
+            font-size: 18px;
+        }
+        .part-of-speech {
+            background-color: #3498db;
+            color: white;
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 4px;
+            margin: 10px 0 5px 0;
+            font-weight: bold;
+        }
+        .definition {
+            margin: 5px 0 5px 20px;
+            color: #555;
+        }
+        .example {
+            margin-left: 40px;
+            color: #888;
+            font-style: italic;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        hr {
+            margin: 40px 0;
+        }
+        .info-section {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .info-section h3 {
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dictionary Lookup</h1>
+    <div class="search-area">
+        <input type="text" id="wordInput" placeholder="Enter a word...">
+        <button onclick="lookupWord()">Search</button>
+    </div>
+    <div id="result"></div>
+
+    <hr>
+
+    <div class="info-section">
+        <h3>About This API</h3>
+        <p><strong>API Used:</strong> Free Dictionary API</p>
+        <p><strong>Why I selected it:</strong> This API is completely free, requires no API key, returns data in JSON format, and is useful for anyone learning English or needing quick word definitions.</p>
+        <p><strong>Website:</strong> <a href="https://dictionaryapi.dev/">https://dictionaryapi.dev/</a></p>
+
+        <h3>Parameters Used</h3>
+        <p>The API takes a word as a parameter in the URL. To look up a word, you add it to the end of the URL like this: <code>https://api.dictionaryapi.dev/api/v2/entries/en/hello</code>. The en part specifies that we want English definitions.</p>
+
+        <h3>Where This API Would Be Helpful</h3>
+        <p>This API could be useful for language-learning apps or any website where users need to quickly look up word definitions on the fly.</p>
+    </div>
+
+    <script>
+        function lookupWord() {
+            var word = document.getElementById("wordInput").value.trim();
+            if (word === "") {
+                document.getElementById("result").innerHTML = '<p class="error">Please enter a word.</p>';
+                return;
+            }
+
+            var url = "https://api.dictionaryapi.dev/api/v2/entries/en/" + word;
+
+            fetch(url)
+                .then(res => res.text())
+                .then(data => {
+                    var entries = JSON.parse(data);
+
+                    // Check if the API returned an error
+                    if (entries.title) {
+                        document.getElementById("result").innerHTML =
+                            '<p class="error">Word not found. Please try another word.</p>';
+                        return;
+                    }
+
+                    var output = "";
+                    for (var i = 0; i < entries.length; i++) {
+                        var entry = entries[i];
+                        output += '<div class="word-result">';
+                        output += '<h2>' + entry.word + '</h2>';
+
+                        // Display phonetic if available
+                        if (entry.phonetic) {
+                            output += '<p class="phonetic">' + entry.phonetic + '</p>';
+                        }
+
+                        // Display meanings
+                        for (var m = 0; m < entry.meanings.length; m++) {
+                            var meaning = entry.meanings[m];
+                            output += '<p class="part-of-speech">' + meaning.partOfSpeech + '</p>';
+
+                            for (var d = 0; d < meaning.definitions.length && d < 3; d++) {
+                                var def = meaning.definitions[d];
+                                output += '<p class="definition">' + (d + 1) + '. ' + def.definition + '</p>';
+                                if (def.example) {
+                                    output += '<p class="example">"' + def.example + '"</p>';
+                                }
+                            }
+                        }
+                        output += '</div>';
+                    }
+
+                    document.getElementById("result").innerHTML = output;
+                })
+                .catch(error => console.log(error));
+        }
+    </script>
+</body>
+</html>
